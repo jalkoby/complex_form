@@ -1,0 +1,96 @@
+require 'spec_helper'
+
+describe ComplexForm::Base do
+  context 'defined property methods' do
+    it 'define setter and getter' do
+      form = SignleProperyForm.new
+      form.should be_respond_to(:name)
+      form.should be_respond_to(:name=)
+    end
+
+    it 'allow define properties by scope' do
+      form = FewPropertiesForm.new
+      form.should be_respond_to(:name)
+      form.should be_respond_to(:age)
+      form.should be_respond_to(:name=)
+      form.should be_respond_to(:age=)
+    end
+  end
+
+  it 'assign values' do
+    form = SignleProperyForm.new
+    name = "Alise Woo"
+    form.name = name
+    form.name.should == name
+  end
+
+  it 'behaves like open struct' do
+    phone = double('Phone')
+    form = SignleProperyForm.new(:phone => phone)
+    form.phone.should == phone
+    SignleProperyForm.new.should_not be_respond_to(:phone)
+  end
+
+  context 'validation' do
+    context 'active model validation of properties' do
+      subject(:form) { ActiveModelValidationForm.new }
+
+      it 'valid name' do
+        form.name = Faker::Name.name
+        form.valid?
+        form.errors[:name].should be_blank
+      end
+
+      it 'invalid name' do
+        form.name = ""
+        form.valid?
+        form.errors[:name].should be_present
+      end
+
+      it 'valid age' do
+        form.age = 34
+        form.valid?
+        form.errors[:age].should be_blank
+      end
+
+      context 'invalid age' do
+        specify { form.age = -1 }
+        specify { form.age = " " }
+        specify { form.age = 3.4 }
+
+        after do
+          form.valid?
+          form.errors[:age].should be_present
+        end
+      end
+    end
+
+    context 'custom validation' do
+      subject(:form) { CustomValidationForm.new }
+
+      it 'day is even' do
+        form.day = 2
+        form.valid?
+        form.errors[:day].should be_blank
+      end
+
+      it 'day is odd' do
+        form.day = 1
+        form.valid?
+        form.errors[:day].should be_present
+      end
+
+      it 'month is even' do
+        form.month = 2
+        form.valid?
+        form.errors[:month].should be_present
+      end
+
+      it 'month is odd' do
+        form.month = 1
+        form.valid?
+        form.errors[:month].should be_blank
+      end
+    end
+  end
+end

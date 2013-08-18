@@ -1,5 +1,5 @@
 require 'bundler/setup'
-Bundler.require
+Bundler.require(:default, :test)
 
 Dir[File.dirname(__FILE__) + '/examples/**/*.rb'].each { |f| require f }
 
