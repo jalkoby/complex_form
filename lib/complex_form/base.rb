@@ -7,6 +7,14 @@ class ComplexForm::Base
   extend ActiveModel::Translation
 
   class << self
+    def i18n_scope
+      :complexform
+    end
+
+    def schema
+      @schema ||= []
+    end
+
     def properties(*args)
       if args.last.is_a?(Hash)
         options = args.pop
@@ -22,15 +30,16 @@ class ComplexForm::Base
         define_method("#{ name }=") { |value| schema[name].set(value) }
       end
     end
-
     alias :property :properties
 
-    def schema
-      @schema ||= []
+    def validate_model(*list)
+      @validate_model_names ||= []
+      @validate_model_names |= list
     end
+    alias :validate_models :validate_model
 
-    def i18n_scope
-      :complexform
+    def validate_model_names
+      @validate_model_names ||= []
     end
   end
 
@@ -51,6 +60,11 @@ class ComplexForm::Base
   def valid?
     errors.clear
     schema.each { |_, property| property.validate }
+    self.class.validate_model_names.each do |model_name|
+      model = send(model_name)
+      next if model.valid?
+      model.errors.each { |attribute, error| errors.add(:"#{ model_name }_#{ attribute }", error) }
+    end
     errors.empty?
   end
 
