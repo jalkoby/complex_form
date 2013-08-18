@@ -3,7 +3,7 @@ require 'spec_helper'
 describe ComplexForm::Base do
   context 'defined property methods' do
     it 'define setter and getter' do
-      form = SignleProperyForm.new
+      form = SignlePropertyForm.new
       form.should be_respond_to(:name)
       form.should be_respond_to(:name=)
     end
@@ -18,7 +18,7 @@ describe ComplexForm::Base do
   end
 
   it 'assign values' do
-    form = SignleProperyForm.new
+    form = SignlePropertyForm.new
     name = "Alise Woo"
     form.name = name
     form.name.should == name
@@ -26,9 +26,9 @@ describe ComplexForm::Base do
 
   it 'behaves like open struct' do
     phone = double('Phone')
-    form = SignleProperyForm.new(:phone => phone)
+    form = SignlePropertyForm.new(:phone => phone)
     form.phone.should == phone
-    SignleProperyForm.new.should_not be_respond_to(:phone)
+    SignlePropertyForm.new.should_not be_respond_to(:phone)
   end
 
   context 'validation' do

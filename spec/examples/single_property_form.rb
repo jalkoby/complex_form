@@ -1,3 +1,3 @@
-class SignleProperyForm < ComplexForm::Base
+class SignlePropertyForm < ComplexForm::Base
   property :name
 end

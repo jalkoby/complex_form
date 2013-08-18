@@ -1,41 +1,45 @@
-class ComplexForm::Property
-  attr_reader :name, :options, :form
+module ComplexForm
+  autoload :ValidatorFactory, 'complex_form/validator_factory'
 
-  def initialize(name, options, form)
-    @name, @options, @form = name, options, form
+  class Property
+    attr_reader :name, :options, :form
 
-    @validators = []
-    if validations = options[:validate]
-      validations.each do |validator_name, _options|
-        options = _options.is_a?(Hash) ? _options : {}
-        @validators << ComplexForm::ValidatorFactory.find(validator_name).new(options.merge(:attributes => [name]))
+    def initialize(name, options, form)
+      @name, @options, @form = name, options, form
+
+      @validators = []
+      if validations = options[:validate]
+        validations.each do |validator_name, _options|
+          options = _options.is_a?(Hash) ? _options : {}
+          @validators << ComplexForm::ValidatorFactory.find(validator_name).new(options.merge(:attributes => [name]))
+        end
       end
     end
-  end
 
-  def get
-    @value
-  end
+    def get
+      @value
+    end
 
-  def set(value)
-    @value = value
-  end
+    def set(value)
+      @value = value
+    end
 
-  def errors
-    form.errors
-  end
+    def errors
+      form.errors
+    end
 
-  def validate
-    validators.each { |validator| validator.validate(self) }
-  end
+    def validate
+      validators.each { |validator| validator.validate(self) }
+    end
 
-  def read_attribute_for_validation(key)
-    (key == name) ? get : send(key)
-  end
+    def read_attribute_for_validation(key)
+      (key == name) ? get : send(key)
+    end
 
-  private
+    private
 
-  def validators
-    @validators
+    def validators
+      @validators
+    end
   end
 end
