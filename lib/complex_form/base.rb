@@ -72,6 +72,17 @@ module ComplexForm
       end
     end
 
+    def assign_properties(list)
+      (list || {}).each do |key, value|
+        send("#{ key }=", value)
+      end
+    end
+
+    def apply(*args)
+      assign_properties(*args)
+      valid?
+    end
+
     def errors
       @errors ||= ActiveModel::Errors.new(self)
     end

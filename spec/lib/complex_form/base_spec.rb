@@ -93,4 +93,27 @@ describe ComplexForm::Base do
       end
     end
   end
+
+  context 'mass assign properties' do
+    let(:attrs) { { :name => Faker::Name.name, :age => rand(100) } }
+    subject(:form) { FewPropertiesForm.new }
+
+    it '#assign_properties' do
+      form.assign_properties(attrs)
+    end
+
+    context '#apply' do
+      specify { form.apply(attrs).should be_true }
+
+      it 'doesnt pass validation' do
+        form.should_receive(:valid?).and_return(false)
+        form.apply(attrs).should be_false
+      end
+    end
+
+    after do
+      form.name.should == attrs[:name]
+      form.age.should == attrs[:age]
+    end
+  end
 end
