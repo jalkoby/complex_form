@@ -1,0 +1,15 @@
+en:
+  complexform:
+    attributes:
+      i18n:
+        l: Locale
+        k: Key
+        v: Value
+
+ne:
+  complexform:
+    attributes:
+      i18n:
+        l: Elacol
+        k: Yek
+        v: Eulav

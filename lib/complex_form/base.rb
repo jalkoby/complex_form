@@ -47,16 +47,12 @@ module ComplexForm
       end
 
       def represent(name, options = {})
-        @custom_model_name = name
         meth_name = options[:source] || name
         define_method(:represantable) { send(meth_name) }
       end
 
       def model_name
-        @model_name ||= begin
-          name = @custom_model_name || to_s.gsub(/Form\z/, '')
-          ActiveModel::Name.new(self, nil, name.to_s.classify)
-        end
+        @model_name ||= ActiveModel::Name.new(self, nil, to_s.gsub(/Form\z/, ''))
       end
     end
 

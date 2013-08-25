@@ -16,7 +16,6 @@ describe ComplexForm::Base, 'representable functionality' do
   context 'simple representable' do
     subject(:form) { RepresentableForm.new(:user => user) }
 
-    specify { RepresentableForm.model_name.should == "User" }
     specify { form.to_model.should == "ToModel" }
     specify { form.should be_persisted }
     specify { form.to_key.should == "22" }
@@ -26,7 +25,6 @@ describe ComplexForm::Base, 'representable functionality' do
   context 'configured representable' do
     subject(:form) { RepresentableWithCustomNameForm.new(:user => user) }
 
-    specify { RepresentableWithCustomNameForm.model_name.should == "Actor" }
     specify { form.to_model.should == "ToModel" }
     specify { form.should be_persisted }
     specify { form.to_key.should == "22" }
